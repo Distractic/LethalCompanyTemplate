@@ -1,4 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <!-- Copy the plugin to the game's plugin directory -->
+        <Exec Command='move "$(TargetDir)$(TargetFileName)" "$(PluginGameDir)"' />
+        <!-- Start the game in a new terminal -->
+        <Exec Command='taskkill /F /IM "$(GameExe)" /T' />
+        <Exec Command='start "" "$(GameDir)$(GameExe)"' />
+    </Target>
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
@@ -7,16 +15,31 @@
         <Version>1.0.0</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
+        
+        <GameExe>Lethal Company.exe</GameExe>
+        <!-- Path of the game directory, should contain Lethal Company.exe -->
+        <GameDir>C:\PROGRA~2\Steam\steamapps\common\Lethal Company\</GameDir>
+        <!-- Path of the game's plugin directory where the built plugin will be copied to -->
+        <PluginGameDir>$(GameDir)\BepInEx\plugins\</PluginGameDir>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="BepInEx.Core" Version="5.*"/>
         <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*"/>
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp" HintPath="..\assembly\Assembly-CSharp.dll" Publicize="true"/>
+        <Reference Include="Unity.Netcode.Runtime" HintPath="..\assembly\Unity.Netcode.Runtime.dll" Publicize="true"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <NetcodePatch Include="$(TargetPath)"/>
     </ItemGroup>
 </Project>
