@@ -1,0 +1,22 @@
+﻿version: 2
+
+updates:
+  - package-ecosystem: nuget
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: monday
+      timezone: Europe/Paris
+    pull-request-branch-name:
+      separator: "-"
+    open-pull-requests-limit: 99
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: monday
+      timezone: Europe/Paris
+    pull-request-branch-name:
+      separator: "-"
+    open-pull-requests-limit: 99
+    rebase-strategy: disabled
