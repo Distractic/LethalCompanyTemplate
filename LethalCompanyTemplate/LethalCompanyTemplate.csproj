@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <!-- Copy the plugin to the game's plugin directory -->
-        <Exec Command='move "$(TargetDir)$(TargetFileName)" "$(PluginGameDir)"' />
-        <!-- Start the game in a new terminal -->
-        <Exec Command='taskkill /F /IM "$(GameExe)" /T' />
-        <Exec Command='start "" "$(GameDir)$(GameExe)"' />
+        <Exec Command='move "$(TargetDir)$(TargetFileName)" "$(PluginGameDir)"'/>
+        <!-- Kill every instance of the game, ignore errors if none are running -->
+        <Exec Condition="'$(StartWhenBuilt)'=='true'" Command='taskkill /F /IM "$(GameExe)" /T || exit 0'/>
+        <!-- Start new instances of the game as many times as specified in NumberOfClients -->
+        <!-- The ping command is used to apply a delay between each instance, otherwise only one BepInEx debug terminal would be opened -->
+        <!-- Use ping command is a workaround because Windows doesn't have a sleep command -->
+        <Exec Condition="'$(StartWhenBuilt)'=='true'" Command='for /L %%i in (1,1,$(NumberOfClients)) do (start "" "$(GameExePath)" &amp; if %%i lss $(NumberOfClients) (ping 127.0.0.1 -n $(PingDelay) > nul))'/>
     </Target>
 
     <PropertyGroup>
@@ -15,12 +18,25 @@
         <Version>1.0.0</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
-        
-        <GameExe>Lethal Company.exe</GameExe>
+
         <!-- Path of the game directory, should contain Lethal Company.exe -->
         <GameDir>C:\PROGRA~2\Steam\steamapps\common\Lethal Company\</GameDir>
         <!-- Path of the game's plugin directory where the built plugin will be copied to -->
-        <PluginGameDir>$(GameDir)\BepInEx\plugins\</PluginGameDir>
+        <PluginGameDir>$(GameDir)BepInEx\plugins\</PluginGameDir>
+        <!-- Path of the game's managed directory where the game's dlls are located -->
+        <AssemblyGameDir>$(GameDir)Lethal Company_Data\Managed\</AssemblyGameDir>
+        <!-- Name of the game executable -->
+        <GameExe>Lethal Company.exe</GameExe>
+        <!-- Entire path of the game executable -->
+        <GameExePath>$(GameDir)$(GameExe)</GameExePath>
+        <!-- Number of instances of the game to start to test the plugin -->
+        <NumberOfClients>2</NumberOfClients>
+        <!-- Delay between each start of the game in seconds -->
+        <DelayBetweenClientsInSeconds>10</DelayBetweenClientsInSeconds>
+        <!-- To apply the correct delay between each instance, we need to add 1 to the delay because the first "echo" sent by the ping command is instant -->
+        <PingDelay>$([MSBuild]::Add($(DelayBetweenClientsInSeconds), 1))</PingDelay>
+        <!-- True to start the game when the plugin is built, false to only copy the plugin to the game's plugin directory -->
+        <StartWhenBuilt>true</StartWhenBuilt>
     </PropertyGroup>
 
     <ItemGroup>
@@ -34,9 +50,9 @@
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Reference Include="Assembly-CSharp" HintPath="..\assembly\Assembly-CSharp.dll" Publicize="true"/>
-        <Reference Include="Unity.Netcode.Runtime" HintPath="..\assembly\Unity.Netcode.Runtime.dll" Publicize="true"/>
+    <ItemGroup Label="Game decompilation">
+        <Reference Include="Assembly-CSharp" HintPath="$(AssemblyGameDir)Assembly-CSharp.dll" Publicize="true"/>
+        <Reference Include="Unity.Netcode.Runtime" HintPath="$(AssemblyGameDir)Unity.Netcode.Runtime.dll" Publicize="true"/>
     </ItemGroup>
 
     <ItemGroup>
