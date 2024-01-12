@@ -26,7 +26,7 @@ like [AutoStart](https://thunderstore.io/c/lethal-company/p/qwbarch/AutoStart/).
 
 # Build
 
-When you build the project, this is the steps that are executed:
+When you build the project, the following steps are executed:
 - The built plugin is copied to the game plugin directory.
 - The opened clients are closed.
 - The game is launched.
