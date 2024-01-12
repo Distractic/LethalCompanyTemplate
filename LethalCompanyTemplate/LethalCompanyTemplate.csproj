@@ -30,7 +30,7 @@
         <!-- Entire path of the game executable -->
         <GameExePath>$(GameDir)$(GameExe)</GameExePath>
         <!-- Number of instances of the game to start to test the plugin -->
-        <NumberOfClients>2</NumberOfClients>
+        <NumberOfClients>1</NumberOfClients>
         <!-- Delay between each start of the game in seconds -->
         <DelayBetweenClientsInSeconds>10</DelayBetweenClientsInSeconds>
         <!-- To apply the correct delay between each instance, we need to add 1 to the delay because the first "echo" sent by the ping command is instant -->
