@@ -2,10 +2,12 @@
 
 # Setup
 
+First of all, follow the [wiki](https://lethal.wiki/dev/initial-setup) to have a working development environment.
+
 ## Configuring the project
 
 In the [csproj](LethalCompanyTemplate/LethalCompanyTemplate.csproj) file,
-in the `PropertyGroup` section, there are some properties that you can change to help you configure the project.
+the `PropertyGroup` section, there are some properties that you can change to help you to configure the project.
 
 | Property                     | Description                                                                                                                                                             |
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -21,3 +23,17 @@ in the `PropertyGroup` section, there are some properties that you can change to
 
 To start the game automatically when a client is launched, you can install an auto-start mod
 like [AutoStart](https://thunderstore.io/c/lethal-company/p/qwbarch/AutoStart/).
+
+# Build
+
+When you build the project, this is the steps that are executed:
+- The built plugin is copied to the game plugin directory.
+- The opened clients are closed.
+- The game is launched.
+
+The steps are defined in [csproj](LethalCompanyTemplate/LethalCompanyTemplate.csproj) file.
+
+```bash
+dotnet build
+```
+
