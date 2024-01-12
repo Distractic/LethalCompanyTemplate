@@ -1,0 +1,21 @@
+﻿name: Build branch
+
+on:
+  push:
+    branches-ignore:
+      - "v*"
+    paths-ignore:
+      - '**.md'
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build
+        run: dotnet build
