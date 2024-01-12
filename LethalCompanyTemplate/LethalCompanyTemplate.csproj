@@ -32,7 +32,7 @@
         <!-- Number of instances of the game to start to test the plugin -->
         <NumberOfClients>1</NumberOfClients>
         <!-- Delay between each start of the game in seconds -->
-        <DelayBetweenClientsInSeconds>10</DelayBetweenClientsInSeconds>
+        <DelayBetweenClientsInSeconds>5</DelayBetweenClientsInSeconds>
         <!-- To apply the correct delay between each instance, we need to add 1 to the delay because the first "echo" sent by the ping command is instant -->
         <PingDelay>$([MSBuild]::Add($(DelayBetweenClientsInSeconds), 1))</PingDelay>
         <!-- True to start the game when the plugin is built, false to only copy the plugin to the game's plugin directory -->
