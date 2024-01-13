@@ -23,7 +23,7 @@ dotnet new globaljson --sdk-version <version>
 dotnet new globaljson --sdk-version 7.0.405
 ```
 
-The global.json file is created in the current directory.
+A new [global.json](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json) file is created to set the SDK version to use.
 
 ## Configuring the project
 
