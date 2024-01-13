@@ -2,7 +2,28 @@
 
 # Setup
 
+## Wiki
+
 First of all, follow the [wiki](https://lethal.wiki/dev/initial-setup) to have a working development environment.
+
+## Dotnet version
+
+If you need to set the dotnet version, you can use the following command:
+
+- Check the SDKs installed
+```bash
+dotnet --list-sdks
+```
+
+- Set the SDK version
+```bash
+dotnet new globaljson --sdk-version <version>
+
+# Example
+dotnet new globaljson --sdk-version 7.0.405
+```
+
+The global.json file is created in the current directory.
 
 ## Configuring the project
 
