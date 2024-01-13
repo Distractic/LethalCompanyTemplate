@@ -20,6 +20,8 @@
         <LangVersion>latest</LangVersion>
 
         <!-- Path of the game directory, should contain Lethal Company.exe -->
+        <!-- PROGRA~1 is the short name of Program Files -->
+        <!-- PROGRA~2 is the short name of Program Files (x86) -->
         <GameDir>C:\PROGRA~2\Steam\steamapps\common\Lethal Company\</GameDir>
         <!-- Path of the game's plugin directory where the built plugin will be copied to -->
         <PluginGameDir>$(GameDir)BepInEx\plugins\</PluginGameDir>
