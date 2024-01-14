@@ -9,7 +9,7 @@ public class ShipLightsPatch
     [HarmonyPrefix]
     private static bool OnPowerSwitch(ref ShipLights __instance, object[] __args)
     {
-        Plugin.Log.LogInfo("The lights are now toggled!");
+        Plugin.Log.LogInfo("The lights are now toggled!, are on: " + __instance.areLightsOn);
         return false;
     }
 }

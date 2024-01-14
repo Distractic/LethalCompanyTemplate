@@ -14,6 +14,14 @@
         <GameExePath>$(GameDir)$(GameExe)</GameExePath>
     </PropertyGroup>
 
+    <ItemGroup>
+        <!-- Allows to interact with private fields of classes -->
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
     </ItemGroup>
