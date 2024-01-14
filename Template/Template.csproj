@@ -3,9 +3,13 @@
     <Import Project="..\Common.props" />
 
     <Target Condition="'$(Environment)'!='test'" Name="PostBuild" AfterTargets="PostBuildEvent">
-        <!-- Copy the plugin to the game's plugin directory -->
-        <!-- If we move the plugin, the Test project will not be able to find it -->
-        <Exec Command='copy "$(TargetDir)$(TargetFileName)" "$(PluginGameDir)"' />
+        <!-- Create a temporary copy of the plugin in the target directory -->
+        <!-- This is a workaround because if we copy it directly to the game's plugin directory, an error is thrown because the game is using the plugin -->
+        <Exec Command='copy "$(TargetDir)$(TargetFileName)" "$(TargetDir)$(TargetFileName).tmp"'/>
+        <!-- Move the plugin temporary copy to the game's plugin directory -->
+        <!-- The move command will overwrite the plugin if it already exists and no error will be thrown -->
+        <!-- We can't move the original plugin because it is used by reference for Test project -->
+        <Exec Command='move "$(TargetDir)$(TargetFileName).tmp" "$(PluginGameDir)$(TargetFileName)"' />
         <!-- Kill every instance of the game, ignore errors if none are running -->
         <Exec Condition="'$(StartWhenBuilt)'=='true'" Command='taskkill /F /IM "$(GameExe)" /T || exit 0' />
         <!-- Start new instances of the game as many times as specified in NumberOfClients -->
