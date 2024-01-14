@@ -8,7 +8,7 @@ First of all, follow the [wiki](https://lethal.wiki/dev/initial-setup) to have a
 
 ## Dotnet version
 
-If you need to set the dotnet version, you can use the following command:
+If you need to set the dotnet version ([.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) is recommended), you can use the following command:
 
 - Check the SDKs installed
 ```bash
@@ -56,5 +56,14 @@ The steps are defined in [csproj](LethalCompanyTemplate/LethalCompanyTemplate.cs
 
 ```bash
 dotnet build
+```
+
+# Test
+
+> [!IMPORTANT]
+> To run the tests, you need to have the environment installed and configured, because the project is built before the tests are executed.
+
+```bash
+dotnet test -p:Environment=test
 ```
 
