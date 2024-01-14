@@ -3,8 +3,8 @@
     <Import Project="..\Common.props" />
 
     <Target Condition="'$(Environment)'!='test'" Name="PostBuild" AfterTargets="PostBuildEvent">
-        <!-- Create a temporary copy of the plugin in the game's plugin directory -->
-        <!-- This is a workaround because if we copy directly to the game's plugin directory, an error is thrown because the game is using the plugin -->
+        <!-- Create a temporary copy of the plugin in the target directory -->
+        <!-- This is a workaround because if we copy it directly to the game's plugin directory, an error is thrown because the game is using the plugin -->
         <Exec Command='copy "$(TargetDir)$(TargetFileName)" "$(TargetDir)$(TargetFileName).tmp"'/>
         <!-- Move the plugin temporary copy to the game's plugin directory -->
         <!-- The move command will overwrite the plugin if it already exists and no error will be thrown -->
