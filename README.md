@@ -74,7 +74,7 @@ When you build the project, the following steps are executed:
 - The opened clients are closed.
 - The game is launched.
 
-The steps are defined in [csproj](LethalCompanyTemplate/LethalCompanyTemplate.csproj) file.
+The steps are defined in [Template.csproj](Template/Template.csproj) file.
 
 Command to build the project:
 ```bash
