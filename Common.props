@@ -1,0 +1,31 @@
+﻿<Project>
+    <PropertyGroup>
+        <!-- Path of the game directory, should contain Lethal Company.exe -->
+        <!-- PROGRA~1 is the short path for Program Files -->
+        <!-- PROGRA~2 is the short path for Program Files (x86) -->
+        <GameDir>C:\PROGRA~2\Steam\steamapps\common\Lethal Company\</GameDir>
+        <!-- Path of the game's plugin directory where the built plugin will be copied to -->
+        <PluginGameDir>$(GameDir)BepInEx\plugins\</PluginGameDir>
+        <!-- Path of the game's managed directory where the game's dlls are located -->
+        <AssemblyGameDir>$(GameDir)Lethal Company_Data\Managed\</AssemblyGameDir>
+        <!-- Name of the game executable -->
+        <GameExe>Lethal Company.exe</GameExe>
+        <!-- Entire path of the game executable -->
+        <GameExePath>$(GameDir)$(GameExe)</GameExePath>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- List of game assembly to include as reference -->
+    <ItemGroup>
+        <DllNames Include="Assembly-CSharp" />
+        <DllNames Include="Unity.Netcode.Runtime" />
+    </ItemGroup>
+
+    <!-- Reference to the game assemblies -->
+    <ItemGroup>
+        <Reference Include="@(DllNames)" HintPath="$(AssemblyGameDir)%(Identity).dll" Publicize="true" />
+    </ItemGroup>
+</Project>

@@ -4,18 +4,16 @@ updates:
   - package-ecosystem: nuget
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: monday
-      timezone: Europe/Paris
+      interval: "daily"
+      time: "09:00"
     pull-request-branch-name:
       separator: "-"
     open-pull-requests-limit: 99
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: monday
-      timezone: Europe/Paris
+      interval: "daily"
+      time: "09:00"
     pull-request-branch-name:
       separator: "-"
     open-pull-requests-limit: 99

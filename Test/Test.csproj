@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- Import the common properties to facilitate the build process -->
+    <Import Project="..\Common.props" />
+
+    <!-- To avoid issue with Unity files not found, we need to copy the assembly game files to the output directory (bin) -->
+    <!-- The files are not automatically copied because the project is using net7.0 as target framework -->
+    <!-- This is useful for unit tests that need to load Unity files, however we advise to test "in game" as much as possible instead of mocking Unity -->
+    <Target Name="Copy assembly game files" AfterTargets="Build">
+        <ItemGroup>
+            <ASSEMBLY_GAME_FILES Include="$(AssemblyGameDir)*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(ASSEMBLY_GAME_FILES)" DestinationFolder="$(OutputPath)" />
+    </Target>
+
+    <PropertyGroup>
+        <!-- We need an engine to run test, netstandard doesn't have one -->
+        <TargetFramework>net7.0</TargetFramework>
+
+        <RootNamespace>LethalCompanyTemplate</RootNamespace>
+        <PackageId>Test</PackageId>
+
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+        <PackageReference Include="Moq" Version="4.20.70" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+        <PackageReference Include="coverlet.collector" Version="3.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Template\Template.csproj" />
+    </ItemGroup>
+</Project>

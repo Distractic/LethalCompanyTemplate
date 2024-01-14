@@ -3,19 +3,29 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using LethalCompanyTemplate.patch;
+using LethalCompanyTemplate.service;
 
 namespace LethalCompanyTemplate;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    public static ManualLogSource Log { get; set; }
+    public static Plugin Instance { get; set; }
+
+    public static ManualLogSource Log => Instance.Logger;
 
     private readonly Harmony _harmony = new(PluginInfo.PLUGIN_GUID);
 
+    public TemplateService Service;
+
+    public Plugin()
+    {
+        Instance = this;
+    }
+
     private void Awake()
     {
-        Log = Logger;
+        Service = new TemplateService();
 
         Log.LogInfo($"Applying patches...");
         ApplyPluginPatch();
