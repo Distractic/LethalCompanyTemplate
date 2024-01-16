@@ -12,6 +12,10 @@
         <GameExe>Lethal Company.exe</GameExe>
         <!-- Entire path of the game executable -->
         <GameExePath>$(GameDir)$(GameExe)</GameExePath>
+        <!-- Version of the game supported by the plugin -->
+        <!-- The value must be the same than the one in CI/CD -->
+        <!-- https://www.nuget.org/packages/LethalCompany.GameLibs.Steam -->
+        <GameVersion>49.0.0-alpha.1</GameVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,12 +32,16 @@
 
     <!-- List of game assembly to include as reference -->
     <ItemGroup>
-        <DllNames Include="Assembly-CSharp" />
+        <DllNames Include="Assembly-CSharp" Publicize="true" />
         <DllNames Include="Unity.Netcode.Runtime" />
     </ItemGroup>
 
     <!-- Reference to the game assemblies -->
-    <ItemGroup>
-        <Reference Include="@(DllNames)" HintPath="$(AssemblyGameDir)%(Identity).dll" Publicize="true" />
+    <ItemGroup Condition="'$(CI)' != 'true'">
+        <Reference Include="@(DllNames)" HintPath="$(AssemblyGameDir)%(Identity).dll"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(CI)' == 'true'">
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="$(GameVersion)" PrivateAssets="all" />
     </ItemGroup>
 </Project>

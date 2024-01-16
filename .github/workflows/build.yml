@@ -1,0 +1,42 @@
+﻿name: Build
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.405
+
+      - name: Restore project dependencies
+        run: dotnet restore
+
+      - name: Setup Netcode Patcher
+        id: setup-netcode-patcher
+        uses: Lordfirespeed/setup-netcode-patcher@v0
+        with:
+          netcode-patcher-version: 2.4.0
+          # https://www.nuget.org/packages/LethalCompany.GameLibs.Steam
+          # Must be the same version as the one used in the project
+          deps-packages: '[{"id": "UnityEngine.Modules", "version": "2022.3.9"}, {"id": "LethalCompany.GameLibs.Steam", "version": "49.0.0-alpha.1"}]'
+          target-framework: "netstandard2.1"
+
+      - name: Build
+        run: dotnet build -p:NETCODE_PATCHER_DIR="${{ steps.setup-netcode-patcher.outputs.netcode-patcher-directory }}"
+
+      - name: Test
+        run: dotnet test -p:NETCODE_PATCHER_DIR="${{ steps.setup-netcode-patcher.outputs.netcode-patcher-directory }}"

@@ -1,22 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\Common.props" />
+    <Import Project="..\Common.props"/>
 
-    <Target Condition="'$(Environment)'!='test'" Name="PostBuild" AfterTargets="PostBuildEvent">
+    <!-- Avoid that the game's assemblies are copied to the plugin's target directory -->
+    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
+        </ItemGroup>
+    </Target>
+
+    <Target Condition="'$(CI)' != 'true' And '$(Environment)' != 'test'" Name="PostBuild" AfterTargets="PostBuildEvent">
         <!-- Create a temporary copy of the plugin in the target directory -->
         <!-- This is a workaround because if we copy it directly to the game's plugin directory, an error is thrown because the game is using the plugin -->
         <Exec Command='copy "$(TargetDir)$(TargetFileName)" "$(TargetDir)$(TargetFileName).tmp"'/>
         <!-- Move the plugin temporary copy to the game's plugin directory -->
         <!-- The move command will overwrite the plugin if it already exists and no error will be thrown -->
         <!-- We can't move the original plugin because it is used by reference for Test project -->
-        <Exec Command='move "$(TargetDir)$(TargetFileName).tmp" "$(PluginGameDir)$(TargetFileName)"' />
+        <Exec Command='move "$(TargetDir)$(TargetFileName).tmp" "$(PluginGameDir)$(TargetFileName)"'/>
         <!-- Kill every instance of the game, ignore errors if none are running -->
-        <Exec Condition="'$(StartWhenBuilt)'=='true'" Command='taskkill /F /IM "$(GameExe)" /T || exit 0' />
+        <Exec Condition="'$(StartWhenBuilt)' == 'true'" Command='taskkill /F /IM "$(GameExe)" /T || exit 0'/>
         <!-- Start new instances of the game as many times as specified in NumberOfClients -->
         <!-- The ping command is used to apply a delay between each instance, otherwise only one BepInEx debug terminal would be opened -->
         <!-- Use ping command is a workaround because Windows doesn't have a sleep command -->
-        <Exec Condition="'$(StartWhenBuilt)'=='true'"
-              Command='for /L %%i in (1,1,$(NumberOfClients)) do (start "" "$(GameExePath)" &amp; if %%i lss $(NumberOfClients) (ping 127.0.0.1 -n $(PingDelay) > nul))' />
+        <Exec Condition="'$(StartWhenBuilt)' == 'true'"
+              Command='for /L %%i in (1,1,$(NumberOfClients)) do (start "" "$(GameExePath)" &amp; if %%i lss $(NumberOfClients) (ping 127.0.0.1 -n $(PingDelay) > nul))'/>
     </Target>
 
     <PropertyGroup>
@@ -41,9 +48,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.Core" Version="5.*" />
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" />
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.*"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*"/>
+        <!-- Version of the Unity engine used by the game -->
+        <!-- The value must be the same than the one in CI/CD -->
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"/>
     </ItemGroup>
 </Project>
