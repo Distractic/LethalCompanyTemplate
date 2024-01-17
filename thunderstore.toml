@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 repository = "https://thunderstore.io"
 
 [package]
-namespace = "YourThunderstoreTeamName"
+namespace = "YourThunderstoreTeam"
 name = "Template"
 description = "A template for Lethal Company plugins."
 websiteUrl = "https://github.com/Distractic/LethalCompanyTemplate"

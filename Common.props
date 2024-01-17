@@ -3,7 +3,7 @@
     <PropertyGroup>
         <!-- Name of the team on Thunderstore -->
         <!-- https://thunderstore.io/settings/teams -->
-        <RootNamespace>YourThunderstoreTeamName</RootNamespace>
+        <RootNamespace>YourThunderstoreTeam</RootNamespace>
         <!-- The plugin will be built in the bin directory -->
         <OutputPath>bin</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

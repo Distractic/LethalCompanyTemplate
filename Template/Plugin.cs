@@ -1,10 +1,10 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using YourThunderstoreTeamName.patch;
-using YourThunderstoreTeamName.service;
+using YourThunderstoreTeam.patch;
+using YourThunderstoreTeam.service;
 
-namespace YourThunderstoreTeamName;
+namespace YourThunderstoreTeam;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin

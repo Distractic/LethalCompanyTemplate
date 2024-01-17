@@ -1,7 +1,7 @@
 ﻿using GameNetcodeStuff;
 using HarmonyLib;
 
-namespace YourThunderstoreTeamName.patch;
+namespace YourThunderstoreTeam.patch;
 
 /// <summary>
 /// Patch to apply the effect when the game is loaded and unloaded.

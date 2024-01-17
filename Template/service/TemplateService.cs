@@ -1,4 +1,4 @@
-﻿namespace YourThunderstoreTeamName.service;
+﻿namespace YourThunderstoreTeam.service;
 
 public class TemplateService
 {
