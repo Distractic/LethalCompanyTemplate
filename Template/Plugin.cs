@@ -1,11 +1,10 @@
-﻿using System;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using LethalCompanyTemplate.patch;
-using LethalCompanyTemplate.service;
+using YourThunderstoreTeam.patch;
+using YourThunderstoreTeam.service;
 
-namespace LethalCompanyTemplate;
+namespace YourThunderstoreTeam;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LethalCompanyTemplate.service;
+namespace YourThunderstoreTeam.service;
 
 public class TemplateServiceBaseTest
 {

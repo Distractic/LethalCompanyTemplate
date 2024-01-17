@@ -1,5 +1,12 @@
 ﻿<Project>
+
     <PropertyGroup>
+        <!-- Name of the team on Thunderstore -->
+        <!-- https://thunderstore.io/settings/teams -->
+        <RootNamespace>YourThunderstoreTeam</RootNamespace>
+        <!-- The plugin will be built in the bin directory -->
+        <OutputPath>bin</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <!-- Path of the game directory, should contain Lethal Company.exe -->
         <!-- PROGRA~1 is the short path for Program Files -->
         <!-- PROGRA~2 is the short path for Program Files (x86) -->
@@ -24,24 +31,30 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+
+        <!-- Determines the version of the plugin by using git tags -->
+        <PackageReference Include="MinVer" Version="4.3.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
     </ItemGroup>
 
-    <!-- List of game assembly to include as reference -->
-    <ItemGroup>
+    <!-- Reference to the game assemblies -->
+    <!-- On local build, the assemblies are present in the game directory -->
+    <ItemGroup Condition="$(CI) != 'true'">
+        <!-- List of game assembly to include as reference -->
         <DllNames Include="Assembly-CSharp" Publicize="true" />
         <DllNames Include="Unity.Netcode.Runtime" />
-    </ItemGroup>
 
-    <!-- Reference to the game assemblies -->
-    <ItemGroup Condition="'$(CI)' != 'true'">
         <Reference Include="@(DllNames)" HintPath="$(AssemblyGameDir)%(Identity).dll"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(CI)' == 'true'">
+    <!-- On CI build, the assemblies are downloaded from NuGet -->
+    <ItemGroup Condition="$(CI) == 'true'">
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="$(GameVersion)" PrivateAssets="all" />
     </ItemGroup>
 </Project>

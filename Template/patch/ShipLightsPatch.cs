@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace LethalCompanyTemplate.patch;
+namespace YourThunderstoreTeam.patch;
 
 [HarmonyPatch(typeof(ShipLights))]
 public class ShipLightsPatch
