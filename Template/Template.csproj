@@ -62,7 +62,6 @@
         <PropertyGroup>
             <PluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PluginVersion>
         </PropertyGroup>
-        <Message Importance="high" Text="Building Thunderstore package $(PluginVersion)"/>
         <!-- https://github.com/thunderstore-io/thunderstore-cli/wiki -->
         <Exec Command="tcli build --config-path $(SolutionDir)thunderstore.toml --package-version $(PluginVersion)" />
     </Target>
