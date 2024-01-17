@@ -2,37 +2,8 @@
 
     <Import Project="..\Common.props"/>
 
-    <!-- Avoid that the game's assemblies are copied to the plugin's target directory -->
-    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
-        <ItemGroup>
-            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
-        </ItemGroup>
-    </Target>
-
-    <Target Condition="'$(CI)' != 'true' And '$(Environment)' != 'test'" Name="PostBuild" AfterTargets="PostBuildEvent">
-        <!-- Create a temporary copy of the plugin in the target directory -->
-        <!-- This is a workaround because if we copy it directly to the game's plugin directory, an error is thrown because the game is using the plugin -->
-        <Exec Command='copy "$(TargetDir)$(TargetFileName)" "$(TargetDir)$(TargetFileName).tmp"'/>
-        <!-- Move the plugin temporary copy to the game's plugin directory -->
-        <!-- The move command will overwrite the plugin if it already exists and no error will be thrown -->
-        <!-- We can't move the original plugin because it is used by reference for Test project -->
-        <Exec Command='move "$(TargetDir)$(TargetFileName).tmp" "$(PluginGameDir)$(TargetFileName)"'/>
-        <!-- Kill every instance of the game, ignore errors if none are running -->
-        <Exec Condition="'$(StartWhenBuilt)' == 'true'" Command='taskkill /F /IM "$(GameExe)" /T || exit 0'/>
-        <!-- Start new instances of the game as many times as specified in NumberOfClients -->
-        <!-- The ping command is used to apply a delay between each instance, otherwise only one BepInEx debug terminal would be opened -->
-        <!-- Use ping command is a workaround because Windows doesn't have a sleep command -->
-        <Exec Condition="'$(StartWhenBuilt)' == 'true'"
-              Command='for /L %%i in (1,1,$(NumberOfClients)) do (start "" "$(GameExePath)" &amp; if %%i lss $(NumberOfClients) (ping 127.0.0.1 -n $(PingDelay) > nul))'/>
-    </Target>
-
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-
-        <RootNamespace>LethalCompanyTemplate</RootNamespace>
-        <PackageId>Template</PackageId>
-        <Description>A template for Lethal Company plugin</Description>
-        <Version>1.0.0</Version>
 
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
@@ -44,7 +15,12 @@
         <!-- To apply the correct delay between each instance, we need to add 1 to the delay because the first "echo" sent by the ping command is instant -->
         <PingDelay>$([MSBuild]::Add($(DelayBetweenClientsInSeconds), 1))</PingDelay>
         <!-- True to start the game when the plugin is built, false to only copy the plugin to the game's plugin directory -->
-        <StartWhenBuilt>true</StartWhenBuilt>
+        <StartGame>true</StartGame>
+
+        <!-- Prefix of the git tag -->
+        <!-- The tag must be in the format v1.2.3 -->
+        <!-- https://github.com/adamralph/minver#options -->
+        <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
 
     <ItemGroup>
@@ -55,4 +31,39 @@
         <!-- The value must be the same than the one in CI/CD -->
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"/>
     </ItemGroup>
+
+    <!-- Avoid that the game's assemblies are copied to the plugin's target directory -->
+    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"/>
+        </ItemGroup>
+    </Target>
+
+    <!-- Move the plugin to the game's plugin directory and start the game to test it -->
+    <Target Condition="'$(CI)' != 'true' And $(StartGame)" Name="StartGame" AfterTargets="PostBuildEvent">
+        <!-- Create a temporary copy of the plugin in the target directory -->
+        <!-- This is a workaround because if we copy it directly to the game's plugin directory, an error is thrown because the game is using the plugin -->
+        <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFiles="$(TargetDir)$(TargetFileName).tmp"/>
+        <!-- Move the plugin temporary copy to the game's plugin directory -->
+        <!-- The move command will overwrite the plugin if it already exists and no error will be thrown -->
+        <!-- We can't move the original plugin because it is used by reference for Test project -->
+        <Move SourceFiles="$(TargetDir)$(TargetFileName).tmp" DestinationFiles="$(PluginGameDir)$(TargetFileName)"/>
+        <!-- Kill every instance of the game, ignore errors if none are running -->
+        <Exec Command='taskkill /F /IM "$(GameExe)" /T || exit 0'/>
+        <!-- Start new instances of the game as many times as specified in NumberOfClients -->
+        <!-- The ping command is used to apply a delay between each instance, otherwise only one BepInEx debug terminal would be opened -->
+        <!-- Use ping command is a workaround because Windows doesn't have a sleep command -->
+        <Exec Command='for /L %%i in (1,1,$(NumberOfClients)) do (start "" "$(GameExePath)" &amp; if %%i lss $(NumberOfClients) (ping 127.0.0.1 -n $(PingDelay) > nul))'/>
+    </Target>
+
+    <!-- Build the plugin for Thunderstore publication -->
+    <!-- The command will create a zip file in the target directory using the thunderstore.toml file -->
+    <Target Condition="'$(BUILD_THUNDERSTORE_PACKAGE)' == 'true'" Name="ThunderstoreBuild" AfterTargets="PostBuildEvent" DependsOnTargets="MinVer">
+        <PropertyGroup>
+            <PluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PluginVersion>
+        </PropertyGroup>
+        <Message Importance="high" Text="Building Thunderstore package $(PluginVersion)"/>
+        <!-- https://github.com/thunderstore-io/thunderstore-cli/wiki -->
+        <Exec Command="tcli build --config-path $(SolutionDir)thunderstore.toml --package-version $(PluginVersion)" />
+    </Target>
 </Project>

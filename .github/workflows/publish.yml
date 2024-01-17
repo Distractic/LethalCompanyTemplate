@@ -1,21 +1,19 @@
-﻿name: Build
+﻿name: Publish
 
 on:
-  push:
-    paths-ignore:
-      - '**.md'
-
-concurrency:
-  group: check-${{ github.ref }}
-  cancel-in-progress: true
+  release:
+    types: [ published ]
 
 jobs:
-  build:
-    name: Build
+  publish:
+    name: Build and publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Necessary to retrieve the latest tag name
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -41,6 +39,11 @@ jobs:
 
       - name: Build
         run: dotnet build
+        env:
+          BUILD_THUNDERSTORE_PACKAGE: true
 
-      - name: Test
-        run: dotnet test
+      - name: Publish
+        run: tcli publish --config-path thunderstore.toml --file build/*.zip
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_AUTH_TOKEN }}
+

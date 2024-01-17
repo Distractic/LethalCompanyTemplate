@@ -1,4 +1,4 @@
-﻿namespace LethalCompanyTemplate.service;
+﻿namespace YourThunderstoreTeamName.service;
 
 public class TemplateService
 {

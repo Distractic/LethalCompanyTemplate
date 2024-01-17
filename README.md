@@ -16,11 +16,13 @@ First of all, follow the [wiki](https://lethal.wiki/dev/initial-setup) to have a
 If you need to set the dotnet version, you can use the following command:
 
 - Command to list the installed SDKs:
+
 ```bash
 dotnet --list-sdks
 ```
 
 - Command to set the dotnet version:
+
 ```bash
 dotnet new globaljson --sdk-version <version>
 
@@ -59,7 +61,7 @@ It's applied only to [Template](Template) projects.
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | NumberOfClients              | The number of clients to launch when the project is built. This is recommended to be between 5 and 10 seconds to avoid problem with debug terminal and auto-start mods. |
 | DelayBetweenClientsInSeconds | The delay between the start of each client.                                                                                                                             |
-| StartWhenBuilt               | If true, the clients will be started when the project is built.                                                                                                         |
+| StartGame                    | If true, the clients will be started when the project is built.                                                                                                         |
 
 ### Simplify test
 
@@ -77,6 +79,7 @@ When you build the project, the following steps are executed:
 The steps are defined in [Template.csproj](Template/Template.csproj) file.
 
 Command to build the project:
+
 ```bash
 dotnet build
 ```
@@ -88,7 +91,8 @@ dotnet build
 > tests are executed.
 
 Command to run the tests:
+
 ```bash
-dotnet test -p:Environment=test
+dotnet test -p:StartGame=false
 ```
 
