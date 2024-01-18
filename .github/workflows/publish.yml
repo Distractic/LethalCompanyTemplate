@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: dotnet build
         env:
-          BUILD_THUNDERSTORE_PACKAGE: true
+          BuildThunderstorePackage: true
 
       - name: Publish
         run: tcli publish --config-path thunderstore.toml --file build/*.zip
