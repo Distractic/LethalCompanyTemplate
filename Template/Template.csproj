@@ -58,7 +58,7 @@
 
     <!-- Build the plugin for Thunderstore publication -->
     <!-- The command will create a zip file in the target directory using the thunderstore.toml file -->
-    <Target Condition="'$(BUILD_THUNDERSTORE_PACKAGE)' == 'true'" Name="ThunderstoreBuild" AfterTargets="PostBuildEvent" DependsOnTargets="MinVer">
+    <Target Condition="'$(BuildThunderstorePackage)' == 'true'" Name="ThunderstoreBuild" AfterTargets="PostBuildEvent" DependsOnTargets="MinVer">
         <PropertyGroup>
             <PluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PluginVersion>
         </PropertyGroup>
