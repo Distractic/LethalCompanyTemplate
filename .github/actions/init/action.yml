@@ -1,0 +1,35 @@
+﻿name: Initialization action
+description: Common actions to initialize a Job
+
+inputs:
+  thunderstore-client:
+    description: True if the Thunderstore client should be installed
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.405
+
+    - name: Restore project dependencies
+      shell: bash
+      run: dotnet restore
+
+    - name: Setup Netcode Patcher
+      id: setup-netcode-patcher
+      uses: Lordfirespeed/setup-netcode-patcher@v0
+      with:
+        netcode-patcher-version: 2.4.0
+        # https://www.nuget.org/packages/LethalCompany.GameLibs.Steam
+        # Must be the same version as the one used in the project
+        deps-packages: '[{"id": "UnityEngine.Modules", "version": "2022.3.9"}, {"id": "LethalCompany.GameLibs.Steam", "version": "49.0.0-alpha.1"}]'
+        target-framework: "netstandard2.1"
+
+    - name: Install Thunderstore client
+      if: ${{ inputs.thunderstore-client == 'true' }}
+      shell: bash
+      # https://github.com/thunderstore-io/thunderstore-cli
+      run: dotnet tool install -g tcli
