@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/Distractic/LethalCompanyTemplate/compare/v1.0.0...v1.0.1) (2024-01-20)
+
+
+### Bug Fixes
+
+* **ci/cd:** Publish trigger ([20dbe80](https://github.com/Distractic/LethalCompanyTemplate/commit/20dbe8065435c6d14e3126420f0573619d908622))
+* Publish to thunderstore after auto-release ([#14](https://github.com/Distractic/LethalCompanyTemplate/issues/14)) ([f19678d](https://github.com/Distractic/LethalCompanyTemplate/commit/f19678d3959aaf2fef994625f99cfccdb8a978b2))
+
 ## 1.0.0 (2024-01-20)
 
 
