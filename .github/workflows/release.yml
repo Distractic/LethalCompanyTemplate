@@ -10,9 +10,46 @@ permissions:
   pull-requests: write
 
 jobs:
-  release-please:
+  release:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+
     steps:
       - uses: google-github-actions/release-please-action@v4
+        id: release
         with:
           release-type: simple
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    if: ${{ needs.release.outputs.release_created }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Necessary to retrieve the latest tag name
+          # MinVer will search for the latest tag to determine the new version
+          fetch-depth: 0
+
+      - name: Initialization
+        uses: ./.github/actions/init
+        with:
+          thunderstore-client: true
+
+      - name: Build
+        run: dotnet build
+        env:
+          BuildThunderstorePackage: true
+
+      - name: Publish to Thunderstore
+        run: tcli publish --config-path thunderstore.toml --file build/*.zip
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_AUTH_TOKEN }}
+
+      - name: Upload artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ needs.release.outputs.tag_name }} build/*.zip
