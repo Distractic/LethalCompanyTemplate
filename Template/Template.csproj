@@ -32,16 +32,10 @@
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <!-- https://github.com/EvaisaDev/UnityNetcodePatcher -->
-        <!-- Allows to patch elements like networked behaviours, RPCs, etc. -->
-        <!-- Also, without that, the CI/CD will fail because the game's assemblies are not findable -->
-        <PackageReference Include="Evaisa.NetcodePatcher.MSBuild" Version="3.*" PrivateAssets="all"/>
-        <NetcodePatch Include="$(TargetPath)"/>
-    </ItemGroup>
-
     <!-- https://github.com/EvaisaDev/UnityNetcodePatcher#usage-as-a-post-build-event -->
     <!-- Syntax to use the tool installed globally -->
+    <!-- Allows to patch elements like networked behaviours, RPCs, etc. -->
+    <!-- Also, without that, the CI/CD will fail because the game's assemblies are not findable -->
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
         <Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
     </Target>
