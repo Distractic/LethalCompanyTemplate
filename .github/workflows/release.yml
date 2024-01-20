@@ -50,6 +50,6 @@ jobs:
           TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_AUTH_TOKEN }}
 
       - name: Upload artifact
+        run: gh release upload ${{ needs.release.outputs.tag_name }} build/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ needs.release.outputs.tag_name }} build/*.zip
