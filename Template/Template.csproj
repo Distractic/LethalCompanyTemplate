@@ -35,7 +35,6 @@
     <!-- https://github.com/EvaisaDev/UnityNetcodePatcher#usage-as-a-post-build-event -->
     <!-- Syntax to use the tool installed globally -->
     <!-- Allows to patch elements like networked behaviours, RPCs, etc. -->
-    <!-- Also, without that, the CI/CD will fail because the game's assemblies are not findable -->
     <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
         <Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
     </Target>
