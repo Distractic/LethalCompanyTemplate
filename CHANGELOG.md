@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/Distractic/LethalCompanyTemplate/compare/v1.0.1...v1.0.2) (2024-01-21)
+
+
+### Bug Fixes
+
+* Replace NetcodePatcher action with MSBuild ([#17](https://github.com/Distractic/LethalCompanyTemplate/issues/17)) ([e156fde](https://github.com/Distractic/LethalCompanyTemplate/commit/e156fde522acc1fdd21dd255511caec639a4e557))
+
 ## [1.0.1](https://github.com/Distractic/LethalCompanyTemplate/compare/v1.0.0...v1.0.1) (2024-01-20)
 
 
