@@ -32,6 +32,13 @@
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile"/>
     </ItemGroup>
 
+    <!-- https://github.com/EvaisaDev/UnityNetcodePatcher#usage-as-a-post-build-event -->
+    <!-- Syntax to use the tool installed globally -->
+    <!-- Allows to patch elements like networked behaviours, RPCs, etc. -->
+    <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+        <Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
+    </Target>
+
     <!-- Avoid that the game's assemblies are copied to the plugin's target directory -->
     <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
         <ItemGroup>
@@ -58,11 +65,11 @@
 
     <!-- Build the plugin for Thunderstore publication -->
     <!-- The command will create a zip file in the target directory using the thunderstore.toml file -->
-    <Target Condition="'$(BuildThunderstorePackage)' == 'true'" Name="ThunderstoreBuild" AfterTargets="PostBuildEvent" DependsOnTargets="MinVer">
+    <Target Condition="'$(BuildThunderstorePackage)' == 'true'" Name="ThunderstoreBuild" AfterTargets="PostBuildEvent" DependsOnTargets="MinVer;NetcodePatch">
         <PropertyGroup>
             <PluginVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PluginVersion>
         </PropertyGroup>
         <!-- https://github.com/thunderstore-io/thunderstore-cli/wiki -->
-        <Exec Command="tcli build --config-path $(SolutionDir)thunderstore.toml --package-version $(PluginVersion)" />
+        <Exec Command="tcli build --config-path $(SolutionDir)thunderstore.toml --package-version $(PluginVersion)"/>
     </Target>
 </Project>
